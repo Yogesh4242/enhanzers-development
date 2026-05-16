@@ -181,12 +181,10 @@ export async function POST(request: NextRequest) {
         // FIRE & FORGET NOTIFICATIONS
         // ====================================================
 
-        Promise.all([
-            sendTelegram(contactData),
-            sendEmail(contactData),
-        ]).catch((err) =>
-            console.error('Notification error:', err)
-        );
+        await Promise.all([
+     sendTelegram(contactData),
+     sendEmail(contactData),
+        ]);
 
         console.log(
             `✅ New submission from ${name} (${email})`
