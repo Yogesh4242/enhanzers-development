@@ -1,0 +1,52 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom pulse animations */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.4; }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-pulse {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Ensure pure black background */
+body {
+  background: #000000;
+  margin: 0;
+  padding: 0;
+}
+
+/* Add anton font utility */
+.font-anton {
+  font-family: var(--font-anton);
+}
+
+/* Style for split text characters */
+.duplicate-char {
+  position: absolute;
+  inset: 0;
+  transform: translateY(100%);
+}
+
+/* Hide animated words initially to avoid FOUC */
+[data-text-anim] {
+  visibility: hidden;
+}
+
+/* Menu hover effects */
+.menu-overlay__main:has(li:hover) li:not(:hover) {
+  opacity: 0.5;
+}
