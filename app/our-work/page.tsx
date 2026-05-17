@@ -172,7 +172,7 @@ export default function WorkPage() {
       {/* Subtle grid */}
       <div className="fixed inset-0 dark-grid pointer-events-none z-0 opacity-100" />
 
-      {/* ── Prisha-style navbar (dark crème) ── */}
+      {/* ── Prisha-style navbar (dark crème) ──
       <div className="px-2 pt-2 md:px-3 md:pt-3 fixed top-0 w-full z-50">
         <nav className="fixed top-0 w-full p-6 z-50 transition-colors duration-500">
         <div className="flex justify-between items-center max-w-screen-2xl mx-auto px-2">
@@ -194,9 +194,9 @@ export default function WorkPage() {
           </button>
         </div>
       </nav>
-      </div>
+      </div> */}
 
-      {/* Full-screen menu overlay */}
+      {/* Full-screen menu overlay
       <div className={`fixed inset-0 z-40 transition-all duration-500 ease-in-out ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}>
         <div className={`absolute inset-0 bg-[#0a0a0a] transition-all duration-700 ease-in-out ${isMenuOpen ? 'opacity-98 translate-x-0' : 'opacity-0 -translate-x-full'}`} />
         <div className={`relative z-10 min-h-screen flex items-center md:items-start md:pt-36 justify-center md:justify-start px-8 md:px-16 transition-all duration-700 ease-in-out ${isMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
@@ -231,7 +231,7 @@ export default function WorkPage() {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* ── Main content (dark) ── */}
       <main className="relative z-10 pt-40 pb-0 px-6 md:px-12 lg:px-24 max-w-screen-2xl mx-auto">
@@ -354,7 +354,7 @@ export default function WorkPage() {
 
             {/* CTA button */}
             <a
-              href="/contact"
+              href="/#contact"
               className="group inline-flex items-center gap-5 bg-stone-900 text-[#e8e4db] rounded-full px-12 py-5 text-sm font-semibold tracking-widest uppercase hover:bg-stone-700 transition-all duration-300 shadow-2xl hover:shadow-stone-900/30 hover:scale-105"
             >
               <span>Start a Conversation</span>

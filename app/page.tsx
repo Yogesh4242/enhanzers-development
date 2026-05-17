@@ -59,10 +59,7 @@ const projects = [
 ];
 
 export default function AgencySite() {
-  const [isHovered, setIsHovered] = useState(false);
   const mountRef = useRef<HTMLDivElement>(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [hoveredProjectId, setHoveredProjectId] = useState<number | null>(null);
 
   // Portfolio State
@@ -75,59 +72,16 @@ export default function AgencySite() {
   const [statusMessage, setStatusMessage] = useState('');
   const [statusType, setStatusType] = useState<'success' | 'error' | null>(null);
 
-  // Handle menu item clicks
+  // Modified to just handle smooth scrolling for on-page CTA buttons
   const handleMenuClick = (sectionId: string) => {
-    setIsMenuOpen(false);
-    setHoveredItem(null);
-    
-    setTimeout(() => {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        element.scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
-    }, 300);
-  };
-
-  // Prevent body scroll when menu is open
-  useEffect(() => {
-    if (isMenuOpen) {
-      document.body.classList.add('no-scroll');
-    } else {
-      document.body.classList.remove('no-scroll');
-      setHoveredItem(null);
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
     }
-
-    return () => {
-      document.body.classList.remove('no-scroll');
-    };
-  }, [isMenuOpen]);
-
-  // Function to convert text to double-struck mathematical font
-  const toDoubleStruck = (text: string): string => {
-    const doubleStruckMap: { [key: string]: string } = {
-      'A': '𝔸', 'B': '𝔹', 'C': 'ℂ', 'D': '𝔻', 'E': '𝔼', 'F': '𝔽', 'G': '𝔾',
-      'H': 'ℍ', 'I': '𝕀', 'J': '𝕁', 'K': '𝕂', 'L': '𝕃', 'M': '𝕄', 'N': 'ℕ',
-      'O': '𝕆', 'P': 'ℙ', 'Q': 'ℚ', 'R': 'ℝ', 'S': '𝕊', 'T': '𝕋', 'U': '𝕌',
-      'V': '𝕍', 'W': '𝕎', 'X': '𝕏', 'Y': '𝕐', 'Z': 'ℤ',
-      'a': '𝕒', 'b': '𝕓', 'c': '𝕔', 'd': '𝕕', 'e': '𝕖', 'f': '𝕗', 'g': '𝕘',
-      'h': '𝕙', 'i': '𝕚', 'j': '𝕛', 'k': '𝕜', 'l': '𝕝', 'm': '𝕞', 'n': '𝕟',
-      'o': '𝕠', 'p': '𝕡', 'q': '𝕢', 'r': '𝕣', 's': '𝕤', 't': '𝕥', 'u': '𝕦',
-      'v': '𝕧', 'w': '𝕨', 'x': '𝕩', 'y': '𝕪', 'z': '𝕫',
-      ' ': ' '
-    };
-
-    return text.split('').map(char => doubleStruckMap[char] || char).join('');
   };
-
-  const menuItems = [
-    { id: 'home', defaultText: 'Home', defaultFont: 'font-serif font-normal', hoverFont: 'font-mono font-bold', defaultSize: 'text-4xl md:text-5xl lg:text-6xl', hoverSize: 'text-4xl md:text-5xl lg:text-6xl' },
-    { id: 'about', defaultText: 'About', defaultFont: 'font-serif font-normal', hoverFont: 'font-mono font-bold', defaultSize: 'text-4xl md:text-5xl lg:text-6xl', hoverSize: 'text-4xl md:text-5xl lg:text-6xl' },
-    { id: 'work', defaultText: 'Work', defaultFont: 'font-serif font-normal', hoverFont: 'font-mono font-bold', defaultSize: 'text-4xl md:text-5xl lg:text-6xl', hoverSize: 'text-4xl md:text-5xl lg:text-6xl' },
-    { id: 'contact', defaultText: 'Contact', defaultFont: 'font-serif font-normal', hoverFont: 'font-mono font-bold', defaultSize: 'text-4xl md:text-5xl lg:text-6xl', hoverSize: 'text-4xl md:text-5xl lg:text-6xl' }
-  ];
 
   // Initialize Lenis Smooth Scroll
   useEffect(() => {
@@ -172,7 +126,6 @@ export default function AgencySite() {
   useEffect(() => {
     if (typeof window === 'undefined' || !mountRef.current) return;
 
-    // --- CONFIGURATION ---
     const MOUSE_SENSITIVITY = 0.0001; 
 
     const scene = new THREE.Scene();
@@ -328,7 +281,6 @@ export default function AgencySite() {
     };
   }, []);
 
-  // UPDATED: Contact form submission to Next.js API route
   const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -338,7 +290,6 @@ export default function AgencySite() {
     const form = e.currentTarget;
     const formData = new FormData(form);
     
-    // Convert FormData to JSON object
     const data = {
       name: formData.get('name') as string,
       email: formData.get('email') as string,
@@ -373,7 +324,6 @@ export default function AgencySite() {
     }
   };
 
-  // Get first two projects with URLs for the portfolio section
   const featuredProjects = projects.filter(p => p.url).slice(0, 2);
 
   return (
@@ -383,75 +333,11 @@ export default function AgencySite() {
         .font-serif { font-family: 'Playfair Display', serif; }
         .font-sans { font-family: 'Inter', sans-serif; }
         .font-grotesk { font-family: 'Space Grotesk', sans-serif; }
-        .no-scroll { overflow: hidden; }
-        .ease-out-expo { transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
         .custom-input { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); color: white; transition: all 0.3s ease; }
         .custom-input:focus { outline: none; border-color: #ffffff; background: rgba(0, 0, 0, 0.6); }
         .loader { border: 2px solid rgba(255,255,255,0.1); border-left-color: #ffffff; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
       `}</style>
-
-      {/* Navbar remake */}
-      <div className="fixed top-4 md:top-6 left-0 w-full z-50 flex justify-center px-4 md:px-6 pointer-events-none">
-        <nav className="pointer-events-auto flex justify-between items-center w-full max-w-screen-2xl bg-white/5 border border-white/10 backdrop-blur-2xl rounded-2xl px-4 py-3 md:px-6 md:py-4 transition-all duration-500 hover:border-white/20 hover:bg-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.36)]">
-          <div className="group cursor-pointer flex flex-col items-start overflow-hidden py-1" onClick={() => handleMenuClick('home')}>
-            <span className="uppercase tracking-[0.2em] md:tracking-[0.3em] font-bold text-xs md:text-sm relative flex flex-col">
-              <span className="transition-transform duration-500 ease-out transform group-hover:-translate-y-[150%] text-white">ENHANZERS</span>
-              <span className="absolute inset-0 transition-transform duration-500 ease-out transform translate-y-[150%] group-hover:translate-y-0 text-cyan-400">ENHANZERS</span>
-            </span>
-          </div>
-          <button
-            className={`relative flex items-center justify-center rounded-full transition-all duration-500 ease-out w-10 h-10 md:w-12 md:h-12 group`}
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            aria-label="Toggle menu"
-          >
-            <div className="absolute inset-0 bg-white/0 rounded-full group-hover:bg-white/10 transition-colors duration-500"></div>
-            <div className="relative w-5 h-4 md:w-6 md:h-5 flex flex-col justify-center items-center">
-              <span className={`absolute w-5 md:w-6 h-[1.5px] transition-all duration-400 ease-out ${isMenuOpen ? 'bg-cyan-400 rotate-45' : 'bg-white -translate-y-1.5 md:-translate-y-1.5 group-hover:-translate-y-2'}`} />
-              <span className={`absolute w-5 md:w-6 h-[1.5px] transition-all duration-400 ease-out ${isMenuOpen ? 'bg-cyan-400 opacity-0 scale-0' : 'bg-white opacity-100 scale-100'}`} />
-              <span className={`absolute w-5 md:w-6 h-[1.5px] transition-all duration-400 ease-out ${isMenuOpen ? 'bg-cyan-400 -rotate-45' : 'bg-white translate-y-1.5 md:translate-y-1.5 group-hover:translate-y-2'}`} />
-            </div>
-          </button>
-        </nav>
-      </div>
-
-      {/* Full-screen Menu Overlay */}
-      <div className={`fixed inset-0 z-40 transition-all duration-500 ease-in-out ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}>
-        <div className={`absolute inset-0 bg-[#020617]/95 backdrop-blur-xl transition-all duration-700 ease-in-out ${isMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-full'}`} />
-        <div className={`relative z-10 min-h-screen flex items-center md:items-start md:pt-32 lg:pt-40 justify-center md:justify-start px-6 md:px-12 lg:px-20 xl:px-32 transition-all duration-700 ease-in-out ${isMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
-          <div className="w-full max-w-2xl">
-            <div className="grid grid-cols-1 gap-4 md:gap-6 w-full text-center md:text-left">
-              {menuItems.map((item, index) => (
-                <div 
-                  key={item.id}
-                  className={`relative transition-all duration-700 ease-out transform ${isMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}
-                  style={{ transitionDelay: isMenuOpen ? `${index * 100 + 200}ms` : '0ms' }}
-                  onMouseEnter={() => setHoveredItem(item.id)}
-                  onMouseLeave={() => setHoveredItem(null)}
-                >
-                  <button onClick={() => handleMenuClick(item.id)} className="relative group w-full text-center md:text-left">
-                    <div className="relative overflow-hidden py-3 md:py-4">
-                      <div className={`transition-all duration-400 transform ${hoveredItem === item.id ? 'opacity-0 translate-x-4' : 'opacity-100 translate-x-0'}`}>
-                        <span className={`${item.defaultFont} ${item.defaultSize} text-white`}>{item.defaultText}</span>
-                      </div>
-                      <div className={`transition-all duration-400 transform absolute inset-0 flex items-center justify-center md:justify-start ${hoveredItem === item.id ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
-                        <div className="text-center md:text-left">
-                          <div className={`${item.hoverFont} ${item.hoverSize} text-blue-400`}>{toDoubleStruck(item.defaultText)}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </button>
-                </div>
-              ))}
-            </div>
-            <div className={`mt-8 md:mt-12 transition-all duration-700 ease-out text-center md:text-left ${isMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-5'}`} style={{ transitionDelay: isMenuOpen ? '800ms' : '0ms' }}>
-              <p className="text-gray-400 text-sm uppercase tracking-widest font-grotesk">Navigate • Explore • Discover</p>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* 3D Background */}
       <div ref={mountRef} className="fixed top-0 left-0 w-full h-full z-0 pointer-events-none opacity-80" />
@@ -502,12 +388,12 @@ export default function AgencySite() {
               <div className="pt-4">
                 <div className="grid grid-cols-2 gap-8 border-t border-white/10 pt-8">
                   <div>
-                    <div className="text-4xl font-serif text-white mb-2">10+</div>
-                    <div className="text-xs uppercase tracking-widest font-mono text-gray-500">Years Experience</div>
+                    <div className="text-4xl font-serif text-white mb-2">05+</div>
+                    <div className="text-xs uppercase tracking-widest font-mono text-gray-500">Digital Products</div>
                   </div>
                   <div>
-                    <div className="text-4xl font-serif text-white mb-2">150+</div>
-                    <div className="text-xs uppercase tracking-widest font-mono text-gray-500">Projects Delivered</div>
+                    <div className="text-4xl font-serif text-white mb-2">100%</div>
+                    <div className="text-xs uppercase tracking-widest font-mono text-gray-500">Custom built</div>
                   </div>
                 </div>
               </div>
@@ -525,7 +411,7 @@ export default function AgencySite() {
             <div className="flex flex-wrap gap-3 border-y border-white/10 py-0"></div>
           </header>
 
-          {/* Project Grid - 2 featured projects with image swap on hover and full image display */}
+          {/* Project Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12 md:gap-y-20">
             <AnimatePresence mode="popLayout">
               {featuredProjects.map((project, index) => (
@@ -549,14 +435,14 @@ export default function AgencySite() {
                         src={hoveredProjectId === project.id ? project.hoverImage : project.image}
                         alt={project.title}
                         fill
-                        className="object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 ease-out-expo"
+                        className="object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
                         sizes="(max-width: 768px) 100vw, 50vw"
                         priority={index === 0}
                       />
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-100 group-hover:opacity-0 transition-opacity duration-500" />
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center pointer-events-none">
-                      <div className="w-20 h-20 rounded-full bg-white text-black flex items-center justify-center transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 ease-out-expo shadow-2xl">
+                      <div className="w-20 h-20 rounded-full bg-white text-black flex items-center justify-center transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-2xl">
                         <ArrowUpRight size={32} strokeWidth={1.5} />
                       </div>
                     </div>
@@ -582,7 +468,6 @@ export default function AgencySite() {
             </AnimatePresence>
           </div>
 
-          {/* New CTA Button */}
           <div className="mt-16 md:mt-24 flex justify-center">
             <Link href="/our-work" className="group inline-flex justify-center px-8 py-4 bg-transparent border border-white/30 text-white rounded-full hover:bg-white hover:text-black transition-all duration-300 uppercase text-xs tracking-[0.2em] font-bold items-center gap-3 backdrop-blur-sm">
               View more of our work
@@ -601,10 +486,8 @@ export default function AgencySite() {
               </h2>
             </div>
 
-            {/* Two Box Grid with Hover Effects */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
               
-              {/* Left Box: Contact Info - with hover lift effect */}
               <motion.div
                 className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 sm:p-8 md:p-10 rounded-2xl md:rounded-3xl transition-all duration-400 cursor-pointer"
                 whileHover={{ y: -8, borderColor: "rgba(255, 255, 255, 0.3)", boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)" }}
@@ -616,7 +499,6 @@ export default function AgencySite() {
                 </p>
                 
                 <div className="space-y-6">
-                  {/* Phone with Phone Icon */}
                   <a href="tel:+919080133878" className="flex items-center space-x-6 group">
                     <div className="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300 border border-white/10">
                       <Phone size={22} className="group-hover:text-black" />
@@ -627,7 +509,6 @@ export default function AgencySite() {
                     </div>
                   </a>
 
-                  {/* Primary Email with Mail Icon */}
                   <a href="mailto:contact@enhanzers.com" className="flex items-center space-x-6 group">
                     <div className="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300 border border-white/10">
                       <Mail size={22} className="group-hover:text-black" />
@@ -638,7 +519,6 @@ export default function AgencySite() {
                     </div>
                   </a>
 
-                  {/* Secondary Email with Mail Icon */}
                   <a href="mailto:yogesh@enhanzers.com" className="flex items-center space-x-6 group">
                     <div className="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300 border border-white/10">
                       <Mail size={22} className="group-hover:text-black" />
@@ -649,7 +529,6 @@ export default function AgencySite() {
                     </div>
                   </a>
 
-                  {/* Location with MapPin Icon */}
                   <div className="flex items-center space-x-6 group pt-4 border-t border-white/10">
                     <div className="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300 border border-white/10">
                       <MapPin size={22} className="group-hover:text-black" />
@@ -662,7 +541,6 @@ export default function AgencySite() {
                 </div>
               </motion.div>
 
-              {/* Right Box: Contact Form - with hover lift effect */}
               <motion.div
                 className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 sm:p-8 md:p-10 rounded-2xl md:rounded-3xl transition-all duration-400"
                 whileHover={{ y: -8, borderColor: "rgba(255, 255, 255, 0.3)", boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)" }}
@@ -671,7 +549,6 @@ export default function AgencySite() {
                 <h3 className="text-2xl font-bold mb-8 font-serif">Send a Message</h3>
                 
                 <form onSubmit={handleContactSubmit} className="space-y-8">
-                  {/* HONEYPOT FIELD (Anti-Bot) */}
                   <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
                     <input type="text" name="website" tabIndex={-1} defaultValue="" autoComplete="off" />
                   </div>
@@ -686,7 +563,6 @@ export default function AgencySite() {
                     <label htmlFor="email" className="absolute left-5 -top-6 text-xs text-blue-400 transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-blue-400 pointer-events-none font-mono tracking-wide">Email Address</label>
                   </div>
 
-                  {/* Phone field added to match backend expectations */}
                   <div className="relative mt-8">
                     <input type="tel" name="phone" id="phone" className="peer custom-input w-full px-5 py-4 rounded-xl placeholder-transparent focus:ring-0 font-light" placeholder="Enter phone (optional)" />
                     <label htmlFor="phone" className="absolute left-5 -top-6 text-xs text-blue-400 transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-blue-400 pointer-events-none font-mono tracking-wide">Phone Number (Optional)</label>
