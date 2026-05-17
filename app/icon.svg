@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Deep Space/Dark Background (Squircle) -->
+  <rect width="512" height="512" rx="112" fill="#0a0a0a"/>
+  
+  <!-- Architectural framing line (Editorial Luxe) -->
+  <rect x="40" y="40" width="432" height="432" rx="80" fill="none" stroke="#e8dcc8" stroke-width="4" stroke-opacity="0.2"/>
+
+  <!-- Minimalist Geometric 'E' -->
+  <g fill="#e8dcc8">
+    <!-- Main vertical column -->
+    <rect x="156" y="136" width="48" height="240" />
+    
+    <!-- Top horizontal beam -->
+    <rect x="204" y="136" width="152" height="48" />
+    
+    <!-- Middle horizontal beam (slightly recessed for balance) -->
+    <rect x="204" y="232" width="104" height="48" />
+    
+    <!-- Bottom horizontal beam -->
+    <rect x="204" y="328" width="152" height="48" />
+  </g>
+
+  <!-- Accent cut-out (Adds a sharp, high-end detail to the bottom right) -->
+  <rect x="332" y="328" width="24" height="48" fill="#0a0a0a" />
+</svg>

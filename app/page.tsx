@@ -4,7 +4,6 @@ import * as THREE from 'three';
 import { ArrowUpRight, Phone, Mail, MapPin, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import Image from 'next/image';
 
 // Lenis Smooth Scroll types
 declare global {
@@ -36,43 +35,18 @@ const projects = [
     tags: ["WebGL", "3D", "Interactive"],
     url: "https://3d-cafe-site.vercel.app"
   },
-  {
-    id: 3,
-    title: "SKS GROUPS",
-    category: "Corporate Identity",
-    year: "2024",
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2000",
-    hoverImage: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=2000",
-    description: "A comprehensive digital transformation and sleek corporate identity for a leading infrastructure conglomerate.",
-    tags: ["Next.js", "Three.js", "Branding"]
-  },
-  {
-    id: 4,
-    title: "EGMORE RESIDENCY",
-    category: "Architecture",
-    year: "2024",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=2000",
-    hoverImage: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=2000",
-    description: "Heritage-meets-modernity architectural portfolio showcasing precise structural design.",
-    tags: ["Visualization", "Structure", "Portfolio"]
-  }
+
 ];
 
 export default function AgencySite() {
   const mountRef = useRef<HTMLDivElement>(null);
-  const [hoveredProjectId, setHoveredProjectId] = useState<number | null>(null);
-
-  // Portfolio State
-  const [filter, setFilter] = useState('All');
-  const categories = ['All', 'Architecture', 'Corporate Identity', 'Product Design'];
-  const filteredProjects = filter === 'All' ? projects : projects.filter(p => p.category === filter);
 
   // Contact State
   const [isLoading, setIsLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [statusType, setStatusType] = useState<'success' | 'error' | null>(null);
 
-  // Modified to just handle smooth scrolling for on-page CTA buttons
+  // Handle smooth scrolling for on-page CTA buttons
   const handleMenuClick = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -85,7 +59,6 @@ export default function AgencySite() {
 
   // Initialize Lenis Smooth Scroll
   useEffect(() => {
-    // Load Lenis from CDN
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js';
     script.async = true;
@@ -106,7 +79,6 @@ export default function AgencySite() {
       }
 
       requestAnimationFrame(raf);
-
       (window as any).lenisInstance = lenis;
     };
 
@@ -401,7 +373,7 @@ export default function AgencySite() {
           </div>
         </section>
 
-        {/* PORTFOLIO SECTION */}
+        {/* PORTFOLIO SECTION (Fixed with High-Performance Crossfade) */}
         <section id="work" className="min-h-screen relative pt-20 md:pt-24 pb-24 md:pb-32 px-4 md:px-12 lg:px-24 max-w-screen-2xl mx-auto">
           <header className="mb-16">
             <span className="font-mono text-xs tracking-[0.3em] uppercase text-cyan-400 mb-6 block">Selected Works</span>
@@ -421,43 +393,55 @@ export default function AgencySite() {
                   target="_blank"
                   rel="noopener noreferrer"
                   layout
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
                   transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.1 }}
                   className="group relative cursor-pointer block"
-                  onMouseEnter={() => setHoveredProjectId(project.id)}
-                  onMouseLeave={() => setHoveredProjectId(null)}
                 >
-                  <div className="relative overflow-hidden bg-white/5 aspect-[16/9] mb-8 rounded-xl border border-white/5">
-                    <div className="relative w-full h-full">
-                      <Image
-                        src={hoveredProjectId === project.id ? project.hoverImage : project.image}
-                        alt={project.title}
-                        fill
-                        className="object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        priority={index === 0}
-                      />
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-100 group-hover:opacity-0 transition-opacity duration-500" />
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center pointer-events-none">
-                      <div className="w-20 h-20 rounded-full bg-white text-black flex items-center justify-center transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-2xl">
-                        <ArrowUpRight size={32} strokeWidth={1.5} />
+                  {/* ── Hardware-Accelerated CSS Crossfade ── */}
+                  <div className="overflow-hidden relative bg-[#0a0a0a] aspect-[16/9] mb-8 rounded-sm">
+                    
+                    {/* Base Image */}
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="absolute inset-0 object-cover w-full h-full opacity-60 group-hover:opacity-0 transition-opacity duration-700 ease-in-out z-10 will-change-[opacity]"
+                    />
+                    
+                    {/* Hover Image */}
+                    <img
+                      src={project.hoverImage}
+                      alt={`${project.title} hover`}
+                      className="absolute inset-0 object-cover w-full h-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-in-out z-20 will-change-[opacity]"
+                    />
+
+                    {/* Dark Vignette Overlay */}
+                    <div className="absolute inset-0 bg-black/30 opacity-100 group-hover:opacity-0 transition-opacity duration-700 ease-in-out z-30" />
+                    
+                    {/* CTA Arrow */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-in-out flex items-center justify-center pointer-events-none z-40">
+                      <div className="w-16 h-16 rounded-full bg-[#e8dcc8] text-[#0a0a0a] flex items-center justify-center transform translate-y-8 group-hover:translate-y-0 transition-transform duration-700 cubic-bezier(0.16, 1, 0.3, 1) shadow-xl">
+                        <ArrowUpRight size={24} strokeWidth={1.5} />
                       </div>
                     </div>
                   </div>
+
+                  {/* Text Elements */}
                   <div>
                     <div className="flex justify-between items-baseline mb-4">
-                      <h3 className="text-2xl md:text-3xl font-serif font-medium group-hover:italic group-hover:text-blue-400 transition-all duration-300 text-white">
+                      <h3 className="text-2xl md:text-3xl font-serif font-medium group-hover:italic transition-all duration-300 text-white">
                         {project.title}
                       </h3>
-                      <span className="font-mono text-xs text-white/40">{project.year}</span>
+                      <span className="font-mono text-xs text-white/30">{project.year}</span>
                     </div>
-                    <p className="text-gray-400 text-sm mb-6 font-sans tracking-wide leading-relaxed">{project.description}</p>
+                    <p className="text-white/50 text-sm mb-6 font-sans tracking-wide leading-relaxed">{project.description}</p>
                     <div className="flex flex-wrap gap-2">
                       {project.tags.map(tag => (
-                        <span key={tag} className="text-[10px] uppercase font-mono tracking-widest px-3 py-1.5 border border-white/10 text-white/40 rounded-full group-hover:border-white/30 group-hover:text-white/80 transition-colors backdrop-blur-sm">
+                        <span
+                          key={tag}
+                          className="text-[10px] uppercase font-mono tracking-widest px-3 py-1.5 border border-white/10 text-white/30 rounded-sm group-hover:border-white/30 group-hover:text-white/60 transition-colors"
+                        >
                           {tag}
                         </span>
                       ))}
@@ -476,7 +460,7 @@ export default function AgencySite() {
           </div>
         </section>
 
-        {/* CONTACT SECTION - Two Box Layout with Hover Effects */}
+        {/* CONTACT SECTION */}
         <section id="contact" className="min-h-screen relative flex items-center justify-center px-4 sm:px-6 md:px-12 lg:px-24 py-20 md:py-24 bg-gradient-to-b from-transparent to-black/80">
           <div className="max-w-screen-xl mx-auto w-full">
             <div className="text-center mb-20">
