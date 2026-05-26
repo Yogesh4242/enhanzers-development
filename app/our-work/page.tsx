@@ -85,7 +85,7 @@ const projects = [
     hoverImage: "/sks groups 0.png",
     description: "Client showcase and digital transformation success stories.",
     tags: ["Showcase", "Portfolio", "Client"],
-    url: "https://client-showcase-taupe.vercel.app"
+    url: "https://client-showcase-taupe.vercel.app/projects"
   }
 ];
 
