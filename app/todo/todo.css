@@ -1,0 +1,241 @@
+:root {
+    --bg-color: #121212; 
+    --glass-bg: rgba(30, 30, 36, 0.7); 
+    --glass-border: rgba(255, 255, 255, 0.05);
+    --text-main: #FFFFFF;
+    --text-muted: #8892B0;
+    --accent: #00F2FE;
+    --accent-hover: #4FACFE;
+    --danger: #FF4B4B;
+}
+
+.todo-container {
+    background-color: transparent; /* Let the global app background handle this if needed */
+    color: var(--text-main);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    touch-action: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    user-select: none;
+    padding : 70px 0px 0px 0px; /* Updated to remove top padding */
+}
+
+.todo-container * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.view-container {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    height: 100%;
+}
+
+.view-active {
+    display: flex !important;
+}
+
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Updated Top Padding to clear the Nav */
+.todo-container main {
+    flex: 1; 
+    padding: 100px 24px 120px 24px; /* Increased from 30px to 100px */
+    overflow-y: auto; 
+    display: flex; 
+    flex-direction: column;
+}
+
+.todo-container ::-webkit-scrollbar { width: 10px; }
+.todo-container ::-webkit-scrollbar-track { background: transparent; }
+.todo-container ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+.todo-container ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+
+.todo-container ul { 
+    list-style: none; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+    width: 100%; 
+    max-width: 900px; 
+    margin: 0 auto; 
+}
+
+li.task-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    animation: slideIn 0.3s ease;
+    transition: transform 0.2s ease, opacity 0.4s ease;
+}
+
+.drag-handle {
+    font-size: 2.5rem;
+    cursor: grab;
+    color: var(--text-muted);
+    opacity: 0.5;
+    padding: 10px;
+    transition: opacity 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.drag-handle:hover { opacity: 1; color: var(--text-main); }
+.drag-handle:active { cursor: grabbing; }
+
+.task-card {
+    flex: 1;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden; 
+    display: flex;
+    align-items: center;
+    font-size: 2.5rem;
+    cursor: pointer;
+    touch-action: none;
+}
+
+.slider-fill {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, rgba(0, 242, 254, 0.1) 0%, rgba(0, 242, 254, 0.4) 100%);
+    box-shadow: 5px 0 20px rgba(0, 242, 254, 0.4);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.slider-fill.snapping {
+    transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.task-content {
+    position: relative;
+    z-index: 2;
+    padding: 30px 35px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    width: 100%;
+    pointer-events: none;
+}
+
+.checkbox {
+    width: 50px;
+    height: 50px;
+    border: 3px solid var(--accent);
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    background: rgba(0, 242, 254, 0.05);
+    pointer-events: auto;
+}
+
+.checkbox:hover {
+    background: rgba(0, 242, 254, 0.15);
+    transform: scale(1.05);
+}
+
+.task-text { flex: 1; word-break: break-word; transition: all 0.3s ease; }
+
+.percentage {
+    font-weight: 800;
+    color: var(--accent);
+    min-width: 80px;
+    text-align: right;
+    text-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+    font-variant-numeric: tabular-nums;
+    transition: color 0.3s;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.particle-container {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 1;
+}
+
+.particle {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent), 0 0 12px var(--accent);
+    animation: particleFade 0.6s ease-out forwards;
+}
+
+@keyframes particleFade {
+    0% { transform: scale(1) translate(0, 0); opacity: 1; }
+    100% { transform: scale(0) translate(-40px, var(--y-drift)); opacity: 0; }
+}
+
+@keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+li.dragging { opacity: 0.4; transform: scale(0.98); }
+li.drag-over .task-card { border: 2px dashed var(--accent); transform: scale(1.02); }
+
+/* Updated Completed State CSS */
+.task-completed .task-card { 
+    cursor: default; 
+    background: rgba(0, 242, 254, 0.03); /* Extremely subtle tint instead of solid fill */
+    border: 1px solid rgba(0, 242, 254, 0.1);
+}
+.task-completed .slider-fill.countdown-active {
+    background: rgba(0, 242, 254, 0.15); /* Softer countdown bar */
+    box-shadow: none;
+}
+.task-completed .task-text { 
+    text-decoration: line-through; 
+    color: rgba(255, 255, 255, 0.25); /* Faded out text */
+}
+.task-completed .checkbox, .history-checked { 
+    background-color: var(--accent) !important; 
+    border-color: var(--accent); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    width: 50px; 
+    height: 50px; 
+    border-radius: 12px; 
+}
+.task-completed .checkbox svg, .history-checked svg {
+    stroke: var(--bg-color); /* Ensure the checkmark icon stands out */
+}
+
+.timestamp { font-size: 1.2rem; color: var(--text-muted); margin-top: 10px; display: block; }
+
+.fab-container { position: fixed; bottom: 40px; right: 40px; display: flex; flex-direction: column; gap: 20px; z-index: 100; }
+.fab { width: 80px; height: 80px; border-radius: 50%; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 8px 24px rgba(0,0,0,0.5); transition: transform 0.2s ease, background-color 0.2s ease; }
+.fab:hover { transform: scale(1.1); }
+.fab-add { background-color: var(--accent); color: var(--bg-color); font-weight: bold; }
+.fab-add:hover { background-color: var(--accent-hover); }
+.fab-history { color: var(--accent); }
+.fab-history:hover { background-color: rgba(0, 242, 254, 0.1); }
+
+.input-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(18, 18, 18, 0.85); backdrop-filter: blur(8px); z-index: 200; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+.input-modal.active { opacity: 1; pointer-events: all; }
+.input-content { width: 80%; max-width: 900px; transform: translateY(30px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; gap: 20px; }
+.input-modal.active .input-content { transform: translateY(0); }
+.input-content input { width: 100%; color: var(--text-main); padding: 30px 40px; font-size: 2.8rem; border-radius: 24px; outline: none; border: 1px solid transparent; }
+.input-content input::placeholder { color: var(--text-muted); }
+.input-content input:focus { border: 1px solid var(--accent); box-shadow: 0 0 20px rgba(0, 242, 254, 0.1); }
+.input-hint { text-align: center; color: var(--text-muted); font-size: 1.4rem; }
+
+.btn-clear { background-color: transparent; color: var(--danger); border: 2px solid var(--danger); padding: 16px 32px; font-size: 1.5rem; margin-top: 40px; align-self: center; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; }
+.btn-clear:hover { background-color: var(--danger); color: #fff; }
+.empty-state { text-align: center; color: var(--text-muted); font-size: 2.2rem; font-style: italic; opacity: 0.6; padding-top: 40px; }
