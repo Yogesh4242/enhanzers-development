@@ -239,3 +239,96 @@ li.drag-over .task-card { border: 2px dashed var(--accent); transform: scale(1.0
 .btn-clear { background-color: transparent; color: var(--danger); border: 2px solid var(--danger); padding: 16px 32px; font-size: 1.5rem; margin-top: 40px; align-self: center; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; }
 .btn-clear:hover { background-color: var(--danger); color: #fff; }
 .empty-state { text-align: center; color: var(--text-muted); font-size: 2.2rem; font-style: italic; opacity: 0.6; padding-top: 40px; }
+
+
+
+/* =========================================
+   MOBILE OPTIMIZATIONS (Max Width: 768px)
+   ========================================= */
+@media (max-width: 768px) {
+    /* Restore vertical scrolling on mobile touch screens */
+    .todo-container {
+        touch-action: pan-y;
+    }
+    
+    /* Adjust main padding to fit smaller screens */
+    .todo-container main {
+        padding: 80px 16px 100px 16px;
+    }
+
+    /* Scale down Typography */
+    .todo-container h1 { font-size: 2.2rem; }
+    .task-card { font-size: 1.5rem; }
+    .task-text { font-size: 1.5rem; }
+    .percentage { font-size: 1.5rem; min-width: 55px; }
+    .timestamp { font-size: 1rem; }
+
+    /* Scale down Task Card Layout */
+    .task-content {
+        padding: 20px 15px;
+        gap: 15px;
+    }
+
+    /* Scale down Checkbox & Icons */
+    .checkbox, .history-checked {
+        width: 36px;
+        height: 36px;
+        border-width: 2px;
+        border-radius: 8px;
+    }
+    
+    /* Ensure SVGs fit perfectly inside scaled checkboxes */
+    .checkbox svg, .history-checked svg {
+        width: 18px;
+        height: 18px;
+    }
+    
+    /* Scale down Drag Handle */
+    .drag-handle {
+        font-size: 1.8rem;
+        padding: 5px;
+    }
+    .drag-handle svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Adjust Floating Action Buttons (FAB) */
+    .fab-container {
+        bottom: 20px;
+        right: 20px;
+        gap: 15px;
+    }
+    .fab {
+        width: 60px;
+        height: 60px;
+    }
+    .fab svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    /* Adjust Input Modal for Mobile Keyboards */
+    .input-content {
+        width: 90%;
+        transform: translateY(10px); /* Keep it slightly higher to avoid mobile keyboards */
+    }
+    .input-content input {
+        padding: 20px 25px;
+        font-size: 1.6rem;
+        border-radius: 16px;
+    }
+    .input-hint {
+        font-size: 1.1rem;
+    }
+
+    /* Adjust Empty State & Buttons */
+    .empty-state {
+        font-size: 1.6rem;
+        padding-top: 20px;
+    }
+    .btn-clear {
+        font-size: 1.2rem;
+        padding: 12px 24px;
+    }
+}

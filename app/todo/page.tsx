@@ -6,7 +6,7 @@ import "./todo.css";
 interface Task {
   id: number;
   text: string;
-  progress: number;
+  progress?: number; // Made optional to fix the Vercel/TypeScript build error
   completedAt?: number;
   completedDateStr?: string;
 }
@@ -24,7 +24,7 @@ export default function TodoPage() {
 
   // Performance and Tracking Refs
   const audioCtxRef = useRef<AudioContext | null>(null);
-  const scheduledTimeouts = useRef<Set<number>>(new Set()); // NEW: Tracks active countdowns
+  const scheduledTimeouts = useRef<Set<number>>(new Set());
   
   const activeSlider = useRef<{
     id: number;
@@ -94,7 +94,6 @@ export default function TodoPage() {
     }
   }, []);
 
-  // FIXED: Strict deduplication in history state
   const moveToHistory = useCallback((id: number) => {
     setTasks((prev) => {
       const taskIndex = prev.findIndex((t) => t.id === id);
@@ -130,14 +129,13 @@ export default function TodoPage() {
     playSuccessSound();
   }, [playSuccessSound]);
 
-  // FIXED: Only schedule one timeout per completed task
   useEffect(() => {
     if (!isHydrated) return;
     const now = Date.now();
     
     tasks.forEach((task) => {
       if (task.completedAt && !scheduledTimeouts.current.has(task.id)) {
-        scheduledTimeouts.current.add(task.id); // Mark as scheduled
+        scheduledTimeouts.current.add(task.id);
         const timePassed = now - task.completedAt;
         
         if (timePassed >= 30000) {
@@ -353,13 +351,13 @@ export default function TodoPage() {
                       onPointerMove={handlePointerMove}
                       onPointerUp={(e) => handlePointerUp(e, task.id)}
                     >
-                      <div className="slider-fill" id={`fill-${task.id}`} style={{ width: `${task.progress}%` }} />
+                      <div className="slider-fill" id={`fill-${task.id}`} style={{ width: `${task.progress || 0}%` }} />
                       <div className="particle-container" />
                       <div className="task-content">
                         <div className="checkbox" onClick={() => triggerCheckbox(task.id)} />
                         <span className="task-text">{task.text}</span>
                         <span className="percentage" id={`pct-${task.id}`}>
-                          {task.progress}%
+                          {task.progress || 0}%
                         </span>
                       </div>
                     </div>
@@ -442,8 +440,9 @@ export default function TodoPage() {
               if (e.key === "Enter") submitTask();
               if (e.key === "Escape") setIsModalOpen(false);
             }}
-            ref={(input) => isModalOpen && input && input.focus()}
-          />
+            ref={(input) => { 
+                if (isModalOpen && input) input.focus(); 
+            }}          />
           <div className="input-hint">
             Press <strong>Enter</strong> to add, or <strong>Escape</strong> to cancel
           </div>
